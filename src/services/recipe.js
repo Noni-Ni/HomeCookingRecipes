@@ -91,6 +91,16 @@ async function recommend(recipeId, userId) {
     return record;
 }
 
+async function searchFor(title){
+    let query = {};
+
+    if(title){
+        query.title = new RegExp(title, 'i');
+    }
+    
+    return Recipe.find(query).lean();
+}
+
 module.exports = {
     getAll,
     getById,
@@ -98,5 +108,6 @@ module.exports = {
     update,
     deleteById,
     getRecent,
-    recommend
+    recommend,
+    searchFor
 }

@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAll, getById } = require("../services/recipe");
+const { getAll, getById, searchFor } = require("../services/recipe");
 const { isUser } = require("../middlewares/guards");
 
 const catalogRouter = Router();
@@ -26,27 +26,22 @@ catalogRouter.get('/catalog/:id', async (req, res) => {
     res.render('details', { recipe, user, isOwner, hasRecommended });
 });
 
+
+
 catalogRouter.get('/search', async (req, res) => {
-    const recipes = await getAll();
 
-    res.render('search', { recipes });
-});
+    let { title } = req.query;
 
-catalogRouter.post('/search', async (req, res) => {
+    
+    let recipes = [];
 
-    let search = req.body.search;
+    if (title ) {
 
-
-    let recipes = await getAll();
-    if (search) {
-
-        recipes = recipes.filter((el) => el.title.toLowerCase().includes(search.toLowerCase()));
+        recipes = await searchFor(title);
+    }else{
+        recipes = await getAll();
     }
 
-
-
-
-    console.log(recipes);
     res.render('search', { recipes });
 });
 
